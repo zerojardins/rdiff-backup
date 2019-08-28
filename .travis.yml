@@ -6,24 +6,32 @@ branches:
   except:
     - /^WIP-.*$/
 
-cache:
-  directories:
-    - $HOME/rdiff-backup/rdiff-backup_testfiles
-
 services:
   - docker
 
 before_script:
   - docker build --pull --tag rdiff-backup-dev:debian-sid .
+  - pwd
+  - ls -la
+  - ls -la ..
 
-# Runs in path /home/travis/build/rdiff-backup/rdiff-backup (git repo work directory)
-# One level up is an empty directory that can be used for artifacts, cache etc.
-script:
-  - docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid tox -c tox.ini -e flake8
-  - docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./setup.py build
-  - docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./run-tests.sh
+matrix:
+  include:
+    - env: flake8
+      script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid tox -c tox.ini -e flake8
+    - env: build
+      script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./setup.py build
+    - env: test
+      script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./run-tests.sh
 
 after_script:
   - pwd
   - ls -la
   - ls -la ..
+
+# Runs in path /home/travis/build/rdiff-backup/rdiff-backup (git repo work directory)
+# One level up is an empty directory that can be used for artifacts, cache etc.
+
+cache:
+  directories:
+    - $HOME/rdiff-backup/rdiff-backup_testfiles
