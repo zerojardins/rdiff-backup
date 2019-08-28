@@ -1,5 +1,3 @@
-language: python
-
 # Ubuntu 18.04 ships with Python 3.6
 dist: bionic
 
@@ -7,6 +5,10 @@ dist: bionic
 branches:
   except:
     - /^WIP-.*$/
+
+cache:
+  directories:
+    - $HOME/rdiff-backup/rdiff-backup_testfiles
 
 services:
   - docker
@@ -17,6 +19,11 @@ before_script:
 # Runs in path /home/travis/build/rdiff-backup/rdiff-backup (git repo work directory)
 # One level up is an empty directory that can be used for artifacts, cache etc.
 script:
-  - docker run --rm docker run -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid tox -c tox.ini -e flake8
-  - docker run --rm docker run -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./setup.py build
-  - docker run --rm docker run -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./run-tests.sh
+  - docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid tox -c tox.ini -e flake8
+  - docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./setup.py build
+  - docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./run-tests.sh
+
+after_script:
+  - pwd
+  - ls -la
+  - ls -la ..
