@@ -10,16 +10,19 @@ RDIFF_TEST_USER: $RDIFF_TEST_USER
 RDIFF_TEST_GROUP: $RDIFF_TEST_GROUP
 "
 
-if [ ! -d ../rdiff-backup_testfiles ]
+pwd
+ls -la ../
+
+if [ -d ../rdiff-backup_testfiles ]
 then
+  echo "Test files found, not re-installng them.."
+else
   echo "Test files not found, installng them.."
   cd ..
   curl -LO https://github.com/ericzolf/rdiff-backup/releases/download/Testfiles2019-08-10/rdiff-backup_testfiles_2019-08-10.tar.gz
   tar xvf *.tar.gz # This must be run as root
   ./rdiff-backup_testfiles.fix.sh ${RDIFF_TEST_USER} ${RDIFF_TEST_GROUP} # This must be run as root
   cd rdiff-backup
-else
-  echo "Test files found, not re-installng them.."
 fi
 
 tox -c tox.ini -e py37
