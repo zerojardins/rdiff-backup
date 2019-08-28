@@ -1,9 +1,6 @@
 # Since we create our own virtualens via Tox, don't use any of Travis-CI Python templates/features
 language: generic
 
-# Ubuntu 18.04 ships with Python 3.6
-dist: bionic
-
 # Don't run tests on WIP branches
 branches:
   except:
@@ -15,14 +12,10 @@ services:
 before_script:
   - docker build --pull --tag rdiff-backup-dev:debian-sid .
 
-matrix:
-  include:
-    - env: Static tests
-      script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid tox -c tox.ini -e flake8
-    - env: Build
-      script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./setup.py build
-    - env: Run-time tests
-      script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./run-tests.sh
+script:
+  - docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid tox -c tox.ini -e flake8
+  - docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./setup.py build
+  - docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./run-tests.sh
 
 after_script:
   - pwd
