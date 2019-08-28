@@ -1,4 +1,4 @@
-sudo: true
+language: python
 
 # Ubuntu 18.04 ships with Python 3.6
 dist: bionic
@@ -11,23 +11,16 @@ branches:
 services:
   - docker
 
-jobs:
-  include:
-    - stage: build docker image
-      script:
-        - pwd
-        - ls -la
-        - ls -la ..
-        - docker build --pull --tag rdiff-backup-dev:debian-sid .
-    - stage: static tests
-      script:
-        - docker run --rm docker run -it -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid tox -c tox.ini -e flake8
-    - stage: build
-      script:
-        - pwd
-        - ls -la
-        - ls -la ..
-        - docker run --rm docker run -it -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./setup.py build
-    - stage: run-time tests
-      script:
-        - docker run --rm docker run -it -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./run-tests.sh
+before_install:
+  - pwd
+  - ls -la
+  - ls -la ..
+  - docker build --pull --tag rdiff-backup-dev:debian-sid .
+
+script:
+  - pwd
+  - ls -la
+  - ls -la ..
+  - docker run --rm docker run -it -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid tox -c tox.ini -e flake8
+  - docker run --rm docker run -it -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./setup.py build
+  - docker run --rm docker run -it -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./run-tests.sh
