@@ -33,4 +33,4 @@ after_script:
 
 cache:
   directories:
-    - $HOME/rdiff-backup/rdiff-backup_testfiles
+    - $HOME/build/rdiff-backup/rdiff-backup_testfiles

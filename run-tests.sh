@@ -10,6 +10,7 @@ RDIFF_TEST_USER: $RDIFF_TEST_USER
 RDIFF_TEST_GROUP: $RDIFF_TEST_GROUP
 "
 
+# Debug: cache:
 pwd
 ls -la ../
 
@@ -27,4 +28,4 @@ fi
 
 tox -c tox.ini -e py37
 tox -c tox_root.ini -e py37 # This must be run as root
-#tox -c tox_slow.ini -e py37
+tox -c tox_slow.ini -e py37
