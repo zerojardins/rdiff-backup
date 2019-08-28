@@ -25,6 +25,7 @@ after_script:
 # Runs in path /home/travis/build/rdiff-backup/rdiff-backup (git repo work directory)
 # One level up is an empty directory that can be used for artifacts, cache etc.
 
+# Travis-CI cannot cache the plain testfiles due to permission errors
 cache:
   directories:
-    - $HOME/build/rdiff-backup/rdiff-backup_testfiles
+    - $HOME/build/rdiff-backup/rdiff-backup_testfiles_*.tar.gz
