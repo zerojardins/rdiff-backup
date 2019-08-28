@@ -12,15 +12,16 @@ branches:
 services:
   - docker
 
-jobs:
+before_script:
+  - docker build --pull --tag rdiff-backup-dev:debian-sid .
+
+matrix:
   include:
-    - stage: Build Docker image
-      script: docker build --pull --tag rdiff-backup-dev:debian-sid .
-    - stage: Static tests
+    - env: Static tests
       script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid tox -c tox.ini -e flake8
-    - stage: Build
+    - env: Build
       script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./setup.py build
-    - stage: Run-time tests
+    - env: Run-time tests
       script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./run-tests.sh
 
 after_script:
