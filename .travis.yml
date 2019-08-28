@@ -1,58 +1,23 @@
-language: python
+sudo: true
 
 # Ubuntu 18.04 ships with Python 3.6
 dist: bionic
-sudo: true
-
-cache:
-  directories:
-    - $HOME/rdiff-backup_testfiles
-
-cache:
-  - pip
-
-before_cache:
-  - rm -f $HOME/.cache/pip/log/debug.log
 
 # Don't run tests on WIP branches
 branches:
   except:
     - /^WIP-.*$/
 
-addons:
-  apt:
-    packages:
-    - libacl1-dev
-    - librsync-dev
-    - rdiff
-    - rsync
-    - python3-all-dev
-    - python3-pylibacl
-    - python3-pyxattr
-
-env:
-  - RDIFF_TEST_UID=1000
-  - ENV RDIFF_TEST_USER=testuser
-  - ENV RDIFF_TEST_GROUP=testuser
-
-install:
-  - pip install -U pip tox virtualenv
-  - cd $HOME/build
-  - curl -LO https://github.com/ericzolf/rdiff-backup/releases/download/Testfiles2019-08-10/rdiff-backup_testfiles_2019-08-10.tar.gz
-  - sudo tar xvf *.tar.gz # This must be run as root
-  - sudo useradd -ms /bin/bash --uid ${RDIFF_TEST_UID} ${RDIFF_TEST_USER}
-  - ./rdiff-backup_testfiles.fix.sh ${RDIFF_TEST_USER} ${RDIFF_TEST_GROUP} # This must be run as root
-
-matrix:
+jobs:
   include:
-    - python: 3.7
-      script: tox -e flake8
-      env: FLAKE8
-    - python: 3.7
+    - stage: build docker image
       script:
-        - pwd
         - ls -la
-        - ./setup.py build
-      env: BUILD
-    - python: 3.7
-      script: tox -e py37
+        - docker build --pull --tag rdiff-backup-dev:debian-sid .
+    - stage: build
+      script:
+        - ls -la
+        - docker run --rm docker run -it -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./setup.py build
+    - stage: test
+      script:
+        - docker run --rm docker run -it -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid tox -c tox.ini -e flake8
