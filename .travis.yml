@@ -29,3 +29,5 @@ matrix:
     - python: 3.7
       script: tox -e flake8
       env: FLAKE8
+    - python: 3.7
+      script: tox -e py37
