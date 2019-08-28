@@ -1,3 +1,6 @@
+# Since we create our own virtualens via Tox, don't use any of Travis-CI Python templates/features
+language: generic
+
 # Ubuntu 18.04 ships with Python 3.6
 dist: bionic
 
@@ -9,19 +12,15 @@ branches:
 services:
   - docker
 
-before_script:
-  - docker build --pull --tag rdiff-backup-dev:debian-sid .
-  - pwd
-  - ls -la
-  - ls -la ..
-
-matrix:
+jobs:
   include:
-    - env: flake8
+    - stage: Build Docker image
+      script: docker build --pull --tag rdiff-backup-dev:debian-sid .
+    - stage: Static tests
       script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid tox -c tox.ini -e flake8
-    - env: build
+    - stage: Build
       script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./setup.py build
-    - env: test
+    - stage: Run-time tests
       script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./run-tests.sh
 
 after_script:
