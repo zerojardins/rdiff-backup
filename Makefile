@@ -31,7 +31,8 @@ test-runtime-slow: test-runtime-files
 	${RUN_COMMAND} tox -c tox_slow.ini -e py37
 
 build:
-	# Build rdiff-backup (assumes source is in directory 'rdiff-backup' and it's parent is writeable)
+	# Build rdiff-backup (assumes source is in directory 'rdiff-backup' and it's
+	# parent is writeable)
 	${RUN_COMMAND} ./setup.py build
 
 container:

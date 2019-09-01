@@ -36,12 +36,3 @@ ENV RDIFF_TEST_USER testuser
 ENV RDIFF_TEST_GROUP testuser
 
 RUN useradd -ms /bin/bash --uid ${RDIFF_TEST_UID} ${RDIFF_TEST_USER}
-
-# Build dev image
-# docker build --pull --tag rdiff-backup-dev:debian-sid .
-
-# Build rdiff-backup (assumes source is in directory 'rdiff-backup' and it's parent is writeable)
-# docker run -it -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./setup.py build
-
-# Run tests (note session will user=root inside Docker)
-# docker run -it -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid ./run-tests.sh

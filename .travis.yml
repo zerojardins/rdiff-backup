@@ -1,4 +1,5 @@
-# Since we create our own virtualens via Tox, don't use any of Travis-CI Python templates/features
+# Since we create our own virtualens via Tox, don't use any of Travis-CI Python
+# templates/features and could as well have "language: generic" here.
 language: python
 
 # Don't run tests on WIP branches
@@ -6,9 +7,11 @@ branches:
   except:
     - /^WIP-.*$/
 
+# We utilize Docker images, thus must have a Docker service
 services:
   - docker
 
+# Build Docker image for development and testing
 before_script:
   - make container
 
@@ -26,10 +29,10 @@ matrix:
 
 script: make $MAKE_STEP
 
-# Runs in path /home/travis/build/rdiff-backup/rdiff-backup (git repo work directory)
-# One level up is an empty directory that can be used for artifacts, cache etc.
-
-# Travis-CI cannot cache the plain testfiles due to permission errors
+# Travis-CI cannot cache the plain testfiles due to permission errors, thus we
+# have the .tar.gz stored in the cache dir to aboid too many re-downloads.
 cache:
   directories:
     - $HOME/build/rdiff-backup/cache
+# Runs in path /home/travis/build/rdiff-backup/rdiff-backup (git repo work directory)
+# One level up is an empty directory that can be used for artifacts, cache etc.
