@@ -32,4 +32,4 @@ script: make $MAKE_STEP
 # Travis-CI cannot cache the plain testfiles due to permission errors
 cache:
   directories:
-    - $HOME/build/rdiff-backup/rdiff-backup_testfiles.tar.gz
+    - $HOME/build/rdiff-backup/cache
