@@ -10,25 +10,20 @@ services:
   - docker
 
 before_script:
-  - docker build --pull --tag rdiff-backup-dev:debian-sid .
+  - make container
 
 matrix:
   include:
     - env: Test code style
-      script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid make test-static
+      script: make test-static
     - env: Test build
-      script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid make build
-    - env: Test runtime basic
-      script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid make test-runtime-basic
+      script: make build
+    - env: Test runtime base
+      script: make test-runtime-base
     - env: Test runtime root
-      script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid make test-runtime-root
+      script: make test-runtime-root
     - env: Test runtime slow
-      script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid make test-runtime-slow
-
-after_script:
-  - pwd
-  - ls -la
-  - ls -la ..
+      script: make test-runtime-slow
 
 # Runs in path /home/travis/build/rdiff-backup/rdiff-backup (git repo work directory)
 # One level up is an empty directory that can be used for artifacts, cache etc.

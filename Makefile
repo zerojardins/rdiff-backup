@@ -1,8 +1,10 @@
 # Makefile to automate rdiff-backup build and install steps
 
-#RUN_COMMAND ?= docker run -it -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid
+# Currently all steps are run isolated inside a Docker image, but this could
+# be extended to have more options.
+RUN_COMMAND ?= docker run -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid
 
-all: test build
+all: clean container test build
 
 test: test-static test-runtime
 
@@ -12,23 +14,29 @@ test-static:
 test-runtime: test-runtime-basic test-runtime-root test-runtime-slow
 
 test-runtime-files:
-	@echo "=== Install files required by the tests: ==="
-	${RUN_COMMAND}  ./setup-testfiles.sh
+	@echo "=== Install files required by the tests ==="
+	${RUN_COMMAND} ./setup-testfiles.sh # This must run as root
 
 test-runtime-basic: test-runtime-files
-	@echo "=== Basic tests: ==="
+	@echo "=== Base tests ==="
 	${RUN_COMMAND} tox -c tox.ini -e py37
 
 test-runtime-root: test-runtime-files
-	@echo "=== Tests that require root permissions: ==="
-	${RUN_COMMAND}  tox -c tox_root.ini -e py37 # This must be run as root
+	@echo "=== Tests that require root permissions ==="
+	${RUN_COMMAND} tox -c tox_root.ini -e py37 # This must be run as root
+	# NOTE! Session will user=root inside Docker)
 
 test-runtime-slow: test-runtime-files
-	@echo "=== Long running performance tests: ==="
+	@echo "=== Long running performance tests ==="
 	${RUN_COMMAND} tox -c tox_slow.ini -e py37
 
 build:
+	# Build rdiff-backup (assumes source is in directory 'rdiff-backup' and it's parent is writeable)
 	${RUN_COMMAND} ./setup.py build
 
 container:
+	# Build development image
 	docker build --pull --tag rdiff-backup-dev:debian-sid .
+
+clean:
+	${RUN_COMMAND} rm -rf .tox.root/	.tox/	MANIFEST build/ testing/__pycache__/
