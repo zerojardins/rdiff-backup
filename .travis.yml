@@ -13,17 +13,20 @@ before_script:
   - make container
 
 matrix:
+  allow_failures:
+    - name: Test code style
+      env: MAKE_STEP=test-static
   include:
-    - env: Test code style
-      script: make test-static
-    - env: Test build
-      script: make build
-    - env: Test runtime base
-      script: make test-runtime-base
-    - env: Test runtime root
-      script: make test-runtime-root
-    - env: Test runtime slow
-      script: make test-runtime-slow
+    - name: Test build
+      env: MAKE_STEP=build
+    - name: Test runtime base
+      env: MAKE_STEP=test-runtime-base
+    - name: Test runtime root
+      env: MAKE_STEP=test-runtime-root
+    - name: Test runtime slow
+      env: MAKE_STEP=test-runtime-slow
+
+script: make $MAKE_STEP
 
 # Runs in path /home/travis/build/rdiff-backup/rdiff-backup (git repo work directory)
 # One level up is an empty directory that can be used for artifacts, cache etc.
