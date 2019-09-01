@@ -11,13 +11,13 @@ test: test-static test-runtime
 test-static:
 	${RUN_COMMAND} tox -c tox.ini -e flake8
 
-test-runtime: test-runtime-basic test-runtime-root test-runtime-slow
+test-runtime: test-runtime-base test-runtime-root test-runtime-slow
 
 test-runtime-files:
 	@echo "=== Install files required by the tests ==="
 	${RUN_COMMAND} ./setup-testfiles.sh # This must run as root
 
-test-runtime-basic: test-runtime-files
+test-runtime-base: test-runtime-files
 	@echo "=== Base tests ==="
 	${RUN_COMMAND} tox -c tox.ini -e py37
 
