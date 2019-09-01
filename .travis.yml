@@ -1,5 +1,5 @@
 # Since we create our own virtualens via Tox, don't use any of Travis-CI Python templates/features
-language: generic
+language: python
 
 # Don't run tests on WIP branches
 branches:
