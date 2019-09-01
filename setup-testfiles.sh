@@ -22,3 +22,9 @@ else
   cd rdiff-backup
 fi
 
+echo "
+Verify a normal user for tests exist:
+RDIFF_TEST_UID: ${RDIFF_TEST_UID}
+RDIFF_TEST_USER: ${RDIFF_TEST_USER}
+RDIFF_TEST_GROUP: ${RDIFF_TEST_GROUP}
+"
