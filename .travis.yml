@@ -12,19 +12,17 @@ services:
 before_script:
   - make container
 
+# Each env becomes a separate job. Add more Python versions to have a matrix.
+env:
+  - MAKE_STEP=test-static
+  - MAKE_STEP=build
+  - MAKE_STEP=test-runtime-base
+  - MAKE_STEP=test-runtime-root
+  - MAKE_STEP=test-runtime-slow
+
 matrix:
   allow_failures:
-    - name: Test code style
-      env: MAKE_STEP=test-static
-  include:
-    - name: Test build
-      env: MAKE_STEP=build
-    - name: Test runtime base
-      env: MAKE_STEP=test-runtime-base
-    - name: Test runtime root
-      env: MAKE_STEP=test-runtime-root
-    - name: Test runtime slow
-      env: MAKE_STEP=test-runtime-slow
+    - env: MAKE_STEP=test-static
 
 script: make $MAKE_STEP
 
