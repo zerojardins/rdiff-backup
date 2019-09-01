@@ -14,12 +14,16 @@ before_script:
 
 matrix:
   include:
-    - env: Test static
+    - env: Test code style
       script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid make test-static
     - env: Test build
       script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid make build
-    - env: Test runtime
-      script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid make test-runtime
+    - env: Test runtime basic
+      script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid make test-runtime-basic
+    - env: Test runtime root
+      script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid make test-runtime-root
+    - env: Test runtime slow
+      script: docker run --rm -i -v ${PWD}/..:/build -w /build/rdiff-backup rdiff-backup-dev:debian-sid make test-runtime-slow
 
 after_script:
   - pwd
@@ -32,4 +36,4 @@ after_script:
 # Travis-CI cannot cache the plain testfiles due to permission errors
 cache:
   directories:
-    - $HOME/build/rdiff-backup/rdiff-backup_testfiles_*.tar.gz
+    - $HOME/build/rdiff-backup/rdiff-backup_testfiles.tar.gz
