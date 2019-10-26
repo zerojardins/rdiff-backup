@@ -5,10 +5,6 @@ import os
 
 from setuptools import setup, Extension
 
-from src.rdiff_backup import Version
-
-version_string = Version.version
-
 if sys.version_info[:2] < (3, 5):
     print("Sorry, rdiff-backup requires version 3.5 or later of Python")
     sys.exit(1)
@@ -48,7 +44,7 @@ if os.name == "posix" or os.name == "nt":
 
 setup(
     name="rdiff-backup",
-    version=version_string,
+    use_scm_version=True,
     description="Local/remote mirroring+incremental backup",
     author="The rdiff-backup project",
     author_email="rdiff-backup-users@nongnu.org",
@@ -70,7 +66,7 @@ setup(
     data_files=[
         ("share/man/man1", ["docs/rdiff-backup.1", "docs/rdiff-backup-statistics.1"]),
         (
-            "share/doc/rdiff-backup-%s" % (version_string,),
+            "share/doc/rdiff-backup",
             [
                 "CHANGELOG",
                 "COPYING",
@@ -82,5 +78,6 @@ setup(
             ],
         ),
     ],
+    setup_requires=['setuptools_scm'],
     **extra_options
 )
