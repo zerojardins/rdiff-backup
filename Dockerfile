@@ -39,3 +39,9 @@ ENV RDIFF_TEST_USER testuser
 ENV RDIFF_TEST_GROUP testuser
 
 RUN useradd -ms /bin/bash --uid ${RDIFF_TEST_UID} ${RDIFF_TEST_USER}
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -yqq && \
+    apt-get install -y --no-install-recommends \
+    python3-pip
+
+RUN python3 -m pip install --upgrade setuptools wheel auditwheel

@@ -32,7 +32,7 @@ test-runtime-root: test-runtime-files
 
 test-runtime-slow: test-runtime-files
 	@echo "=== Long running performance tests ==="
-	${RUN_COMMAND} tox -c tox_slow.ini -e py
+	${RUN_COMMAND} tox -c tox_slow.ini -e pypython3 setup.py sdist bdist_wheel
 
 build:
 	# Build rdiff-backup (assumes src/ is in directory 'rdiff-backup' and it's
@@ -43,8 +43,8 @@ bdist_wheel:
 	# Prepare wheel for deployment.
 	# See the notes for target "build"
 	# auditwheel unfortunately does not work with modern glibc
-	${RUN_COMMAND} ./setup.py bdist_wheel
-	# ${RUN_COMMAND} auditwheel repair dist/*.whl
+	${RUN_COMMAND} python3 setup.py sdist bdist_wheel
+	${RUN_COMMAND} auditwheel repair dist/*.whl
 
 build_deb:
 	${RUN_COMMAND} gbp buildpackage -us -uc
