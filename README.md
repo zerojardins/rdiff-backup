@@ -68,6 +68,8 @@ instructions for your specific platform.
 	curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 	sudo python3 get-pip.py
 	sudo pip3 install rdiff-backup
+	
+Notice: If your platform is not i386 or amd64, you may need other dependencies `build-essentials`, `librsync-dev`.
 
 ### Other Linux (From pypi)
 
