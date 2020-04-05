@@ -79,10 +79,11 @@ You need to make sure that the following requirements are met:
 * pyxattr (optional, to support extended attributes) - the xattr library (without py) isn't regularly tested but should work and you will be helped
 * SSH for remote operations
 
-
-	curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-	sudo python3 get-pip.py
-	sudo pip3 install rdiff-backup
+```
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+sudo python3 get-pip.py
+sudo pip3 install rdiff-backup
+```
 
 ### Windows
 
